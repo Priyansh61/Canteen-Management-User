@@ -11,12 +11,14 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class HeaderComponent implements OnInit {
   cartQuantity=0;
+  user:any;
   constructor(cartService:CartService,private userService:UserService) {
     cartService.getCartObservable().subscribe((newCart) => {
       this.cartQuantity = newCart.totalCount;
     })
     }
   ngOnInit(): void {
+    this.user = this.userService.userDetails();
   }
 
   logout(){
@@ -24,8 +26,7 @@ export class HeaderComponent implements OnInit {
   }
 
   isAuth():boolean{
-    console.log(this.userService.isAuth());
-    if (this.userService.loggedIn()==true){
+    if (this.userService.isLoggedIn()){
       return true;
     }
     return false;

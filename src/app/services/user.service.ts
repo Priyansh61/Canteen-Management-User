@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import jwt_decode from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -32,27 +33,10 @@ export class UserService {
     });
   }
 
-  checktoken(data:any){
-    return this.httpClient.get(`${this.url}/user/checkToken`, data
-    );
-  }
 
-  loggedIn(){
-    if(localStorage.getItem('token')){
-      this.checktoken(localStorage.getItem('token')).subscribe((response:any)=>{
-        if(response.status===200){
-          console.log(response);
-          return true;
-        }
-        else{
-          localStorage.removeItem('token');
-          return false;
-        }
-    },(error:any)=>{
-      localStorage.removeItem('token');
-      console.log(error);
-      return false;
-    });
+  isLoggedIn(){
+    if (localStorage.getItem('token')) {
+      return true;
     }
     return false;
   }
@@ -68,7 +52,11 @@ export class UserService {
     this.route.navigate(['']);
   }
 
-  isAuth(){
-    return localStorage.getItem('token');
+  userDetails(){
+    var token = localStorage.getItem('token');
+    var decoded = jwt_decode(token);
+    return decoded;
   }
+
+
 }

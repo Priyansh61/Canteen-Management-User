@@ -23,9 +23,6 @@ export class LoginPageComponent implements OnInit {
       email:['', [Validators.required,Validators.email]],
       password:['', Validators.required]
     });
-
-    this.returnUrl = this.activatedRoute.snapshot.queryParams.returnUrl;
-
   }
 
   get fc(){
@@ -34,14 +31,17 @@ export class LoginPageComponent implements OnInit {
 
   submit(){
     this.isSubmitted = true;
-    if(this.loginForm.invalid) return;
+    if(this.loginForm.invalid) {
+      console.log("Invalid Form");
+      return;
+    };
     var data:any = {
       email:this.loginForm.value.email,
       password:this.loginForm.value.password
     }
     this.userService.login(data).subscribe((response:any)=>{
-      console.log(response);
-      this.router.navigateByUrl(this.returnUrl);
+      localStorage.setItem('token',response.token);
+      this.router.navigateByUrl('/');
     });
   }
 }
